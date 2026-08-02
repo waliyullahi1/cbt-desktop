@@ -1,0 +1,18 @@
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 220 70"
+    preserveAspectRatio="none">
+
+    <path
+        d="
+        M0,70
+        
+        C0,50 8,50 18,50
+        C22,15 32,0 50,0
+        L170,0
+        C188,0 198,15 202,50
+        C212,50 220,50 220,70
+        Z"
+        fill="white"/>
+
+</svg>
