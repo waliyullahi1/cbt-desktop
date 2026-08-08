@@ -6,3 +6,12 @@
   </NuxtLayout>
   </div>
 </template>
+<script setup>
+import { initializeDatabase,  getDictDB} from "~/platforms"
+
+onMounted(async () => {
+    await getDictDB()
+    await initializeDatabase()
+
+})
+</script>

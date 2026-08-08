@@ -9,6 +9,11 @@
   "permissions": [
     "core:default",
     "store:default",
+    "sql:allow-load",
+    "sql:allow-execute",
+    "sql:allow-select",
+    "sql:allow-close",
+    "sql:default",
     "core:webview:allow-create-webview-window",
     "core:window:allow-set-maximizable",
     "core:window:allow-set-fullscreen",

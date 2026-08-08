@@ -49,4 +49,24 @@ body {
 @theme {
   --color-primary: #071936;
   --color-secondary: #071936;
+   --color-app-bg: #f6f3ec;
+  --color-surface: #fffdf8;
+
+  --color-ink: #201f22;
+  --color-ink-soft: #6b665c;
+
+  --color-line: #e6e0d2;
+
+  --color-navy: #24304a;
+  --color-navy-soft: #3c4c6e;
+
+  --color-gold: #b9873b;
+
+  --color-good: #3f7a5c;
+  --color-good-bg: #e7f0e8;
+
+  --color-bad: #ab5137;
+  --color-bad-bg: #f7e9e2;
+
+  --color-mid-bg: #f4ecda;
 }

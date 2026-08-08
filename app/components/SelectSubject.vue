@@ -365,8 +365,8 @@ const SUBJECTS = [
   },
 
   {
-    id: 'english-language',
-    name: 'English Language',
+    id: 'english',
+    name: 'English',
     icon: 'lucide:book-open'
   },
 
@@ -851,7 +851,7 @@ const subjectColors = {
   economics:
     ['bg-teal-100', 'text-teal-600'],
 
-  'english-language':
+  'english':
     ['bg-blue-100', 'text-blue-600'],
 
   'fine-art':

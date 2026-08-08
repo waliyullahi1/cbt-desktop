@@ -1,5 +1,5 @@
 <template>
-  <div class=" flex h-full min-h-0 flex-col overflow-hidden bg-slate-50">
+  <div class=" exam-history flex h-full min-h-0 flex-col overflow-hidden bg-app-bg">
 
     <!-- ================================================= -->
     <!-- HEADER -->
@@ -60,7 +60,7 @@
     <!-- MAIN -->
     <!-- ================================================= -->
 
-    <main class="min-h-0  pb-20 flex-1">
+    <main class="min-h-0 bg-[#fffdf8]  pb-20 flex-1">
 
       <!-- ================================================= -->
       <!-- TOP CONTROL BAR -->
@@ -196,7 +196,7 @@
             :key="subject.id"
             class="group relative overflow  
                    rounded-sm border border-slate-200
-                   bg-white shadow-sm transition
+                   bg-[#fffdf8] shadow-sm transition
                    hover:-translate-y-1
                    hover:shadow-lg"
           >
@@ -204,7 +204,7 @@
             <!-- Card Header -->
             <div
               class="flex items-center justify-between
-                     border-b border-slate-500 bg-slate-20 p-1"
+                     border-b border-slate-500 bg-[#f8f9fa] p-1"
             >
 
               <div class="flex items-center gap-3">
@@ -986,8 +986,8 @@ const openTopicModal = (subject) => {
 }
 const selectedSubjects = ref([
    {
-    id: 'english-language',
-    name: 'English Language',
+    id: 'english',
+    name: 'English',
     icon: 'lucide:book-open'
   }
 ])
@@ -1022,7 +1022,7 @@ const SUBJECTS = [
   'commerce',
   'computer-studies',
   'economics',
-  'english-language',
+  'english',
   'fine-art',
   'french',
   'geography',
@@ -1076,7 +1076,7 @@ const subjectIcons = {
   economics:
     'lucide:chart-no-axes-combined',
 
-  'english-language':
+  'english':
     'lucide:book-open',
 
   'fine-art':
@@ -1202,7 +1202,7 @@ const subjectColors = {
     text: 'text-teal-600'
   },
 
-  'english-language': {
+  'english': {
     bg: 'bg-blue-100',
     text: 'text-blue-600'
   },
@@ -1352,7 +1352,7 @@ const createSubject = (subject) => {
     ...subject,
     year: details?.years?.at(-1) ?? "all",
     topics: [], // <-- add this
-    questions: subject.id === "english-language" ? 60 : 40,
+    questions: subject.subject === "englisH" ? 60 : 40,
     questionOptions: [20, 30, 40, 50, 60, 70, 80, 90, 100]
   }
 }
@@ -1643,7 +1643,7 @@ function shuffleQuestionOptions(question) {
 
 
 const startExam = async () => {
-
+  appState.value.reviewQuestions = false
   if (
     selectedSubjects.value.length === 0
   ) {
@@ -1674,12 +1674,25 @@ const startExam = async () => {
   let examQuestions = []
 
  for (const subject of appState.value.selectedSubjects) {
-
+      console.log(subject, 'subject');
   // Get all questions for this subject
-  let subjectQuestions = questions.filter(
-    question => question.subject === subject.id
-  )
-
+let subjectQuestions = questions.filter(
+  question =>
+    question.subject === subject.id &&
+    question.year === subject.year
+   
+    // (subject.topics.length === 0 ||
+    //   subject.topics.includes(question.topic))
+)
+if(!subjectQuestions){
+  subjectQuestions = questions.filter(
+  question =>
+    question.subject === subject.id
+   
+    // (subject.topics.length === 0 ||
+    //   subject.topics.includes(question.topic))
+)
+}
   // Shuffle question order
   if (shuffleQuestions.value) {
     subjectQuestions = shuffleArray(subjectQuestions)
@@ -1724,7 +1737,7 @@ console.log(examQuestions);
 onMounted(() => {
 
 console.log(appState.value.selectedSubjects, 'appState.value.selectedSubjects');
-
+// appState.value.selectedSubjects =    selectedSubjects.value
 
 if (appState.value.selectedSubjects.length > 0) {
   selectedSubjects.value = appState.value.selectedSubjects
@@ -1761,7 +1774,7 @@ watch(
 // Default questions
         if (!subject.questions) {
           subject.questions =
-            subject.id === "english-language" ? 60 : 40
+            subject.id === "english" ? 60 : 40
         }
        
 
@@ -1784,3 +1797,29 @@ const goHome = () => {
 }
 
 </script>
+<style scoped>
+.exam-history {
+  --bg: #f6f3ec;
+  --surface: #fffdf8;
+  --ink: #201f22;
+  --ink-soft: #6b665c;
+  --line: #e6e0d2;
+  --navy: #24304a;
+  --navy-soft: #3c4c6e;
+  --gold: #b9873b;
+  --good: #3f7a5c;
+  --good-bg: #e7f0e8;
+  --bad: #ab5137;
+  --bad-bg: #f7e9e2;
+  --mid-bg: #f4ecda;
+ 
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+</style>

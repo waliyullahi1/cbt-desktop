@@ -9,6 +9,8 @@ const currentSubject = ref({})
 const currentQuestion  = ref({})
 const Submitted =  ref(false)
 const showExamReport = ref(false)
+const showSubmitModal = ref(false)
+const { save, load,histories } = useExamHistory()
 const activeSubject = ref(
   appState.selectedSubjects?.[0]?.id || null
 )
@@ -118,6 +120,18 @@ const next = () => {
   startQuestionTimer()
 }
 
+const isLastQuestion = computed(() => {
+  const subjectIndex = groupedSubjects.value.findIndex(
+    s => s.id === currentSubject.value.id
+  )
+
+  return (
+    subjectIndex === groupedSubjects.value.length - 1 &&
+    currentSubject.value.currentQuestion >=
+      currentSubject.value.questions.length
+  )
+})
+
 
 
   
@@ -154,7 +168,7 @@ function startExam() {
 
 
 
-const submitExam = () => {
+const submitExam = async () => {
   // Save latest question time
   saveQuestionTime()
 
@@ -216,7 +230,7 @@ const submitExam = () => {
   groupedSubjects.value.forEach(subject => {
      // JAMB total questions for this subject
   const jambQuestions =
-      subject.id === "english-language" ? 60 : 40
+      subject.id === "english" ? 60 : 40
         console.log(jambQuestions);
         console.log();
         
@@ -302,6 +316,17 @@ maxAggregate = Number(maxAggregate.toFixed(2))
     speed
   }
 
+console.log(appState.value.examSettings, 'examSettings');
+
+await save({
+
+    result,
+
+    questions: appState.value.examQuestions,
+
+    settings: appState.value.examSettings
+
+})
   appState.value.examResult = result
 
   showExamReport.value = true
@@ -486,17 +511,24 @@ function timeToSeconds(time) {
 }
 
 onMounted( async () => {
-
+  
+  // await load()
+  // console.log(histories.value);
+  
   const  examDuration= timeToSeconds(appState.value.examSettings.duration);
-    
-    if (!appState.value.selectedSubjects?.length) return
+      console.log(appState.value.selectedSubjects);
+      
+    // if (!appState.value.selectedSubjects?.length) return
+  
+     
+  
+   
 
-    activeSubject.value =
-      appState.value.selectedSubjects[0].id
 
     let globalIndex = 1
-
-      groupedSubjects.value = appState.value.selectedSubjects.map(subject => {
+      if (appState.value.selectedSubjects?.length> 0 &&  !appState.value.reviewQuestions) {
+         activeSubject.value =  appState.value.selectedSubjects[0].id
+         groupedSubjects.value = appState.value.selectedSubjects.map(subject => {
 
         const subjectQuestions =   appState.value.examQuestions.filter(q => q.subject === subject.id).map(question => ({
               ...question,
@@ -513,6 +545,30 @@ onMounted( async () => {
           questions: subjectQuestions
         }
       })
+      }
+
+       if (appState.value.selectedSubjectsView?.length >0 &&  appState.value.reviewQuestions) {
+         activeSubject.value =  appState.value.selectedSubjectsView[0].id
+         groupedSubjects.value = appState.value.selectedSubjectsView.map(subject => {
+
+        const subjectQuestions =   appState.value.examQuestionsView.filter(q => q.subject === subject.id).map(question => ({
+              ...question,
+              index: globalIndex++,
+              answered: false,
+              
+            }))
+             Submitted.value = true
+
+        return {
+          ...subject,
+          currentQuestion: 1,
+          answered: 0,
+         
+          questions: subjectQuestions
+        }
+      })
+      }
+     
      startingDate.value =   new Date().toISOString(),
       currentSubject.value = groupedSubjects.value[0] 
       currentQuestion.value = currentSubject.value.questions[0]
@@ -557,7 +613,12 @@ const getQuestionClass = (question, index) => {
 
 <template>
   <div class="min-h-screen w-screen bg-white">
+
  <div class="   px sm:px-6 lg:px-8 w-fit right-0 mt-2 fixed h-12  flex justify-end item-center  px-0 z-100"> 
+    <ExamSubmitModal
+    v-model="showSubmitModal"
+    @submit="submitExam"
+  />
  <ExamTimer
     ref="timer"
     :duration="timeToSeconds(appState.examSettings.duration)"
@@ -565,6 +626,7 @@ const getQuestionClass = (question, index) => {
     @finished="timeFinished"
     @tick="ticking"
   />
+
   </div>
     <NavigationExamNavBar />
      <!-- ================================= -->
@@ -573,6 +635,8 @@ const getQuestionClass = (question, index) => {
 
     <div v-if="showExamReport" class=" fixed w-full bg-black/40 z-50 flex h-dvh justify-center items-center ">
         <div class="  min-w-[80%] flex flex-col rounded-sm  overflow-auto max-w-3xl  h-[80%] bg-white ">
+
+   
         <!-- ================================= -->
         <!-- HEADER -->
         <!-- ================================= -->
@@ -637,7 +701,9 @@ const getQuestionClass = (question, index) => {
       class="flex items-end h-10  px-14 border-b-2 border-b-primary overflow-x-auto"
     >
       <button
-        v-for="subject in appState?.selectedSubjects || 20 "
+   v-for="subject in appState.reviewQuestions
+  ? appState.selectedSubjectsView
+  : appState.selectedSubjects || []"
         :key="subject.id"
         @click="selectSubject(subject)"
         :class="[
@@ -746,13 +812,15 @@ const getQuestionClass = (question, index) => {
               <div class="flex-1 flex  flex-col justify-between     items-baseline">
               <div class=" flex-1  overflow-y-auto w-full">
                 <h3 class=" font-semibold text-gr mb-4 text-[clamp(14px,1vw,18px)] t">
+               
                       Question: {{ currentSubject?.currentQuestion }}/{{  currentSubject?.questions?.length }}  
                     </h3>
                 <div class=" mx-auto">
-
+                    <img :src="currentQuestion?.imageUrl" class=" mb-3" v-if="currentQuestion?.imageUrl"/>
                   <h2 class=" text-[17px] font-medium fontum mb-5">
-                    {{ currentQuestion?.question }}   
+                    {{ currentQuestion?.question ||  currentQuestion?.text }}   
                   </h2>
+                  
 
                 
                   
@@ -823,8 +891,8 @@ const getQuestionClass = (question, index) => {
                       <h3 class=" font-semibold text-xl  mt-3 mb-2 text-[clamp(14px,1vw,18px)] t">
                         Explanation
                         </h3>
-                        <h3 class=" font-semibold ">Topic: <span class="  font-medium ">{{currentQuestion.topic}}</span></h3>
-                      <p class=" mt-5">{{currentQuestion.solution}}</p>
+                        <h3 class=" font-semibold ">Topic: <span class="  font-medium ">{{currentQuestion?.topic}}</span></h3>
+                      <p class=" mt-5">{{currentQuestion?.solution}}</p>
                     </div>
               </div>
               </div>
@@ -842,10 +910,7 @@ const getQuestionClass = (question, index) => {
 
                       <button
                         @click="next"
-                       :disabled="
-                              groupedSubjects.findIndex(s => s.id === currentSubject.id) === groupedSubjects.length - 1 &&
-                              currentSubject.currentQuestion >= currentSubject.questions.length
-                            "
+                        :disabled="currentSubject?.currentQuestion >= currentSubject?.questions?.length"
                         class="flex items-center gap-2 px-4 hover:bg-amber-500 py-1 rounded-sm  bg-green-700 text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Next
@@ -853,7 +918,7 @@ const getQuestionClass = (question, index) => {
                       </button>
 
                         <button  v-if="Submitted"
-                            @click="submitExam"
+                            @click="showExamReport = true"
                           
                             class="flex items-center gap-2 px-4 hover:bg-amber-500 py-1 rounded-sm bg-orange-800 text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed"
                           >
@@ -863,7 +928,7 @@ const getQuestionClass = (question, index) => {
                     </div>
 
                      <button
-                    @click="submitExam"
+                    @click="showSubmitModal = true"
                    v-if="!Submitted"
                     class="flex items-center gap-2 px-4 hover:bg-amber-500 py-1 rounded-sm bg-orange-800 text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed"
                   >
@@ -884,7 +949,7 @@ const getQuestionClass = (question, index) => {
       
 
     </main>
-
+    <ExamSubmitmodel/>
   </div>
 </template>
 

@@ -275,25 +275,25 @@
          </div>
          <!-- appState.showSecond: {{ appState.showSecond}} appState.currentPage:{{}} -->
 
-           <div      :class="{ active: appState.showSecond }" class=" page second w-full   bg- -100 h-full"> 
+           <div      :class="{ active: appState.showSecond }" class=" page second w-full  bg-ambe  bg- -100 h-full"> 
 
              <div class=" h-full " v-if="appState.currentPage  === 'UTME'">
               <PracticeUTME @gohome="closeBook"/>
              
              </div>
 
-             <div v-if="appState.currentPage === 'WAEC'">
+             <div v-if="appState.currentPage === 'DICTIONARY'">
               
-              Prepare for WAEC
+              <DictionarySearch   @gohome="closeBook"/>
              </div>
 
-             <div v-if="appState.currentPage === 'NECO'">
-              Practice for NECO
+             <div class=" h-full " v-if="appState.currentPage === 'RESULTS'">
+                <ResultHistory @gohome="closeBook"/>
               
              </div>
 
              <div  v-if="appState.currentPage === 'CLASS'">
-              Practice for CLASS
+              <QuestionSearch @gohome="closeBook"/>
              
              </div>
            </div>
@@ -329,20 +329,22 @@ const dashboardItems = [
     icon: 'lucide:book-open',
     class: 'bg-pink-100 text-pink-900',
     route: '/practice/waec',
-     component:'WAEC'
+     component:'DICTIONARY'
   },
   {
-    title: 'Practice for NECO',
-    description: 'Prepare for your NECO exam',
-    icon: 'lucide:graduation-cap',
-    class: 'bg-teal-100 text-teal-900',
-    route: '/practice/neco'
-  },
+  title: 'Result History',
+  description: 'View all your past practice and exam results',
+  icon: 'lucide:clipboard-list',
+  class: 'bg-indigo-100 text-indigo-900',
+  route: 'results-history',
+  component:'RESULTS'
+},
   {
     title: 'Classroom',
     description: 'Learn from expert teachers',
     icon: 'lucide:school',
     class: 'bg-blue-100 text-blue-900',
+    component:'CLASS',
     route: '/classroom'
   },
   {
@@ -453,7 +455,7 @@ const previousSlide = () => {
  
 
   perspective: 1800px;
-  overflow: scroll; 
+  
 }
 
 .page {
