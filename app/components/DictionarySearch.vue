@@ -348,6 +348,7 @@ const goHome = () => emit('gohome')
 .ds-main {
   flex: 1;
   min-height: 0;
+  max-width: 90%;
   overflow-y: auto;
   padding: 1.25rem 1rem 5rem;
 }
@@ -359,7 +360,7 @@ const goHome = () => emit('gohome')
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  max-width: 560px;
+  max-width: 70%;
   margin: 0 auto;
   padding: 0.4rem 0.9rem;
   background: var(--surface);
@@ -384,7 +385,7 @@ const goHome = () => emit('gohome')
   border: none;
   outline: none;
   background: transparent;
-  padding: 0.65rem 0;
+  padding: 0.1rem 0;
   font-family: 'Fraunces', Georgia, serif;
   font-size: 1.1rem;
   color: var(--ink);

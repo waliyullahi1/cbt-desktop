@@ -1,929 +1,404 @@
 <template>
-  <div class=" exam-history flex h-full min-h-0 flex-col overflow-hidden bg-app-bg">
+  <div class="flex h-full min-h-0 flex-col overflow-hidden bg-[#f6f3ec] text-[#201f22] font-['Inter',system-ui,sans-serif]">
 
     <!-- ================================================= -->
     <!-- HEADER -->
     <!-- ================================================= -->
 
     <header
-      class="shrink-0 flex h-14 items-center justify-between
-             bg-primary px-4 text-white shadow-md sm:px-6"
+      class="flex h-14 shrink-0 items-center justify-between
+             bg-[#24304a] px-4 text-[#f4efe2] shadow-[0_1px_0_rgba(0,0,0,0.08)] sm:px-6"
     >
-
-      <!-- Title -->
       <div class="flex items-center gap-3">
-
-        <div
-          class="flex h-10 w-10 items-center justify-center
-                 rounded-xl bg-white/10"
-        >
-          <Icon
-            name="lucide:graduation-cap"
-            class="h-6 w-6"
-          />
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
+          <Icon name="lucide:graduation-cap" class="h-5 w-5" />
         </div>
-
         <div>
-          <h1 class="text-sm font-bold sm:text-lg">
+          <h1 class="font-['Fraunces',Georgia,serif] text-sm font-semibold tracking-wide sm:text-base">
             Practice for UTME
           </h1>
-
-          <!-- <p class="hidden text-xs text-green-100 sm:block">
+          <p class="hidden text-xs text-white/60 sm:block">
             Select your subjects and start practicing
-          </p> -->
+          </p>
         </div>
-
       </div>
 
-
-      <!-- Home -->
       <button
         type="button"
         @click="goHome"
-        class="group flex h-10 w-10 items-center justify-center
-               rounded-xl transition hover:bg-white/10"
+        class="group flex h-10 w-10 items-center justify-center rounded-xl
+               transition hover:bg-white/10"
         title="Go Home"
       >
-
-        <Icon
-          name="lucide:house"
-          class=" text-2xl  transition-transform
-                 group-hover:scale-110"
-        />
-
+        <Icon name="lucide:house" class="h-5 w-5 transition-transform group-hover:scale-110" />
       </button>
-
     </header>
-
 
     <!-- ================================================= -->
     <!-- MAIN -->
     <!-- ================================================= -->
 
-    <main class="min-h-0 bg-[#fffdf8]  pb-20 flex-1">
+    <main class="min-h-0 flex-1 overflow-y-auto px-3 pb-24 pt-4 sm:px-6">
 
       <!-- ================================================= -->
       <!-- TOP CONTROL BAR -->
       <!-- ================================================= -->
 
       <section
-        class="mb-2 flex flex-col gap-4 rounded-sm border
-               border-slate-200 bg-white p-2 shadow-sm
-               md:flex-row md:items-center md:justify-between"
+        class="mb-4 flex flex-col gap-4 rounded-xl border border-[#e6e0d2]
+               bg-[#fffdf8] p-3 shadow-[0_1px_2px_rgba(36,48,74,0.05)]
+               sm:p-4 md:flex-row md:items-center md:justify-between"
       >
-
         <!-- Select subjects -->
         <div class="flex items-center gap-3">
+          <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#f6f3ec] text-[#b9873b]">
+            <Icon name="lucide:layers-3" class="h-5 w-5" />
+          </div>
 
-          <div
-            class="flex h-7 w-7 items-center justify-center
-                   rounded-sm bg-primary/20  text-primary"
+          <button
+            type="button"
+            @click="openSubjectModal()"
+            class="rounded-lg bg-[#24304a] px-4 py-2 text-sm font-semibold text-[#f4efe2]
+                   transition hover:opacity-90 active:scale-95"
           >
-            <Icon
-              name="lucide:layers-3"
-              class="h-5 w-5"
-            />
-          </div>
-
-          <div>
-            <!-- <p class="text-xs text-slate-500">
-              Exam Setup
-            </p> -->
-             <div>
-
-            <button  @click="openSubjectModal()" class="text-sm  px-2 py-1 rounded-sm bg-primary f text-white">
-              Select Subject 
-            </button>
-
-            
-
-          </div>
-
-            <!-- <h2 class="font-bold text-slate-900">
-              Select Subjects
-            </h2> -->
-          </div>
-
+            Select Subject
+          </button>
         </div>
 
-
         <!-- User + Start -->
-        <div
-          class="flex flex-col gap-3 sm:flex-row sm:items-center"
-        >
-
-          <!-- User -->
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div class="flex items-center gap-2">
+            <Icon name="lucide:user-round" class="h-4 w-4 text-[#6b665c]" />
+            <label for="user" class="text-sm font-medium text-[#6b665c]">User</label>
 
-            <Icon
-              name="lucide:user-round"
-              class="h-5 w-5 text-slate-500"
+            <input
+              id="user"
+              v-model="appState.currentsuser"
+              list="subjects"
+              class="rounded-lg border border-[#e6e0d2] bg-[#fffdf8] px-3 py-1.5
+                     text-sm font-medium text-[#201f22] outline-none transition
+                     focus:border-[#3c4c6e] focus:ring-2 focus:ring-[#3c4c6e]/15"
             />
 
-            <label
-              for="user"
-              class="text-sm font-semibold text-slate-700"
-            >
-              User
-            </label>
-  
-                <input
-                  id="user"
-                  v-model="appState.currentsuser"
-                  list="subjects"
-                  class="rounded-sm border border-slate-300
-                        bg-white px-4 py-1 text-sm font-medium
-                        outline-none transition
-                        focus:border-green-600
-                        focus:ring-2 focus:ring-green-100"
-                />
-
-                <datalist id="subjects">
-                  <option
-                    v-for="option in  appState.users  || []"
-                    :key="option"
-                    :value="option"
-                  />
-                </datalist>
-
+            <datalist id="subjects">
+              <option
+                v-for="option in appState.users || []"
+                :key="option"
+                :value="option"
+              />
+            </datalist>
           </div>
 
-
-          <!-- Start -->
           <button
             type="button"
             @click="startExam"
-            class="flex items-center justify-center gap-2
-                   rounded-sm  bg-primary px-4 py-1
-                   text-sm font-semibold text-white
-                   shadow-sm transition
-                    hover:bg-primary/40
-                   active:scale-95"
+            class="flex items-center justify-center gap-2 rounded-lg bg-[#b9873b]
+                   px-5 py-2 text-sm font-semibold text-white shadow-sm
+                   transition hover:opacity-90 active:scale-95"
           >
-
-            <Icon
-              name="lucide:play"
-              class="h-4 w-4"
-            />
-
+            <Icon name="lucide:play" class="h-4 w-4" />
             Start Exam
-
           </button>
-
         </div>
-
       </section>
-
 
       <!-- ================================================= -->
       <!-- SUBJECT GRID -->
       <!-- ================================================= -->
 
-      <section class=" overflow-y-scroll  mb-32   h-full">
+      <section class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
 
-       
-
-
-        <div
-          class="grid grid-cols-1 gap-4 px-2
-                 md:grid-cols-3
-                 xl:grid-cols-3"
+        <!-- SUBJECT CARD -->
+        <article
+          v-for="subject in selectedSubjects"
+          :key="subject.id"
+          class="group relative overflow-hidden rounded-xl border border-[#e6e0d2]
+                 bg-[#fffdf8] shadow-[0_1px_2px_rgba(36,48,74,0.04)] transition
+                 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-14px_rgba(36,48,74,0.25)]"
         >
-
-          <!-- SUBJECT CARD -->
-          <article
-            v-for="subject in selectedSubjects"
-            :key="subject.id"
-            class="group relative overflow  
-                   rounded-sm border border-slate-200
-                   bg-[#fffdf8] shadow-sm transition
-                   hover:-translate-y-1
-                   hover:shadow-lg"
-          >
-
-            <!-- Card Header -->
-            <div
-              class="flex items-center justify-between
-                     border-b border-slate-500 bg-[#f8f9fa] p-1"
-            >
-
-              <div class="flex items-center gap-3">
-
-                <!-- Subject Icon -->
-                <div
-                  class="flex h-5 w-5 items-center
-                         justify-center rounded-sm"
-                  :class="subject.iconBg"
-                >
-
-                  <Icon
-                    :name="subject.icon"
-                    class=" text-xl"
-                    :class="subject.iconColor"
-                  />
-
-                </div>
-
-
-                <div>
-
-                  <h3
-                    class="font-bold text-[16px] text-slate-900"
-                  >
-                    {{ subject.name }}
-                  </h3>
-
-                  <p class="text-xs text-slate-500">
-                    {{ subject.description }}
-                  </p>
-
-                </div>
-
+          <!-- Card Header -->
+          <div class="flex items-center justify-between border-b border-dashed border-[#e6e0d2] bg-[#f8f6ef] px-4 py-3">
+            <div class="flex items-center gap-3">
+              <div
+                class="flex h-8 w-8 items-center justify-center rounded-lg"
+                :class="subject.iconBg || 'bg-[#f6f3ec]'"
+              >
+                <Icon :name="subject.icon" class="h-4 w-4" :class="subject.iconColor || 'text-[#b9873b]'" />
               </div>
 
+              <div>
+                <h3 class="font-['Fraunces',Georgia,serif] text-base font-semibold text-[#24304a]">
+                  {{ subject.name }}
+                </h3>
+                <p v-if="subject.description" class="text-xs text-[#6b665c]">
+                  {{ subject.description }}
+                </p>
+              </div>
+            </div>
 
-              <!-- Selected checkbox -->
+            <!-- Selected checkbox -->
+            <button
+              type="button"
+              @click="toggleSubject(subject)"
+              class="flex h-5 w-5 items-center justify-center rounded-full transition"
+              :class="isSelected(subject)
+                ? 'bg-[#24304a] text-white'
+                : 'bg-[#f6f3ec] text-[#6b665c]'"
+            >
+              <Icon :name="isSelected(subject) ? 'lucide:minus' : 'lucide:plus'" class="h-3.5 w-3.5" />
+            </button>
+          </div>
+
+          <!-- Card Body -->
+          <div class="space-y-3 p-4">
+
+            <!-- YEAR -->
+            <div class="flex items-center gap-3">
+              <label class="flex w-16 shrink-0 items-center gap-1.5 text-xs font-semibold text-[#6b665c]">
+                <Icon name="lucide:calendar-days" class="h-3.5 w-3.5 text-[#3c4c6e]" />
+                Year
+              </label>
+
+              <div class="relative w-full">
+                <select
+                  v-model="subject.year"
+                  class="w-full appearance-none rounded-lg border border-[#e6e0d2]
+                         bg-[#f6f3ec] px-3 py-1.5 font-['IBM_Plex_Mono',monospace] text-xs
+                         font-medium text-[#201f22] outline-none transition
+                         focus:border-[#3c4c6e] focus:bg-[#fffdf8] focus:ring-2 focus:ring-[#3c4c6e]/15"
+                >
+                  <option value="all">All</option>
+                  <option v-for="year in getSubjectDetails(subject)?.years" :key="year" :value="year">
+                    {{ year }}
+                  </option>
+                </select>
+                <Icon
+                  name="lucide:chevron-down"
+                  class="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6b665c]"
+                />
+              </div>
+            </div>
+
+            <!-- QUESTIONS -->
+            <div class="flex items-center gap-3">
+              <label class="flex w-16 shrink-0 items-center gap-1.5 text-xs font-semibold text-[#6b665c]">
+                <Icon name="lucide:list-ordered" class="h-3.5 w-3.5 text-[#3f7a5c]" />
+                Count
+              </label>
+
+              <div class="relative w-full">
+                <select
+                  v-model="subject.questions"
+                  class="w-full appearance-none rounded-lg border border-[#e6e0d2]
+                         bg-[#f6f3ec] px-3 py-1.5 font-['IBM_Plex_Mono',monospace] text-xs
+                         font-medium text-[#201f22] outline-none transition
+                         focus:border-[#3c4c6e] focus:bg-[#fffdf8] focus:ring-2 focus:ring-[#3f7a5c]/15"
+                >
+                  <option v-for="number in subject.questionOptions" :key="number" :value="number">
+                    {{ number }} Questions
+                  </option>
+                </select>
+                <Icon
+                  name="lucide:chevron-down"
+                  class="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6b665c]"
+                />
+              </div>
+            </div>
+
+            <!-- TOPIC -->
+            <div class="flex items-center justify-between rounded-lg border border-[#e6e0d2] bg-[#f6f3ec] px-3 py-2">
+              <div class="flex items-center gap-1.5 text-xs font-semibold text-[#6b665c]">
+                <Icon name="lucide:folder-open" class="h-3.5 w-3.5 text-[#3f7a5c]" />
+                Topic
+                <span class="rounded-full bg-[#fffdf8] px-2 py-0.5 text-[10px] font-semibold text-[#b9873b]">
+                  {{
+                    !subject.topics ||
+                    subject.topics.length === 0 ||
+                    subject.topics.length === getSubjectDetails(subject)?.topics?.length
+                      ? "All"
+                      : `${subject.topics.length} Topics`
+                  }}
+                </span>
+              </div>
+
               <button
                 type="button"
-                @click="toggleSubject(subject)"
-                class="flex h-5 w-5 items-center
-                       justify-center rounded-full
-                       transition"
-                :class="
-                  isSelected(subject)
-                    ? 'bg-primary -600 text-white'
-                    : 'bg-slate-100 text-slate-400'
-                "
+                @click="openTopicModal(subject)"
+                class="flex h-7 w-7 items-center justify-center rounded-full
+                       bg-[#e7f0e8] text-[#3f7a5c] transition hover:bg-[#3f7a5c] hover:text-white"
+                title="Edit Topic"
               >
-
-                <Icon
-                  :name="
-                    isSelected(subject)
-                      ? 'lucide:minus'
-                       : 'lucide:plus'
-                  "
-                  class=" -3 text-sm 5"
-                />
-
+                <Icon name="lucide:pencil" class="h-3.5 w-3.5" />
               </button>
 
+              <TopicSelector
+                v-if="activeSubject"
+                v-model="showTopicModal"
+                v-model:modelTopics="activeSubject.topics"
+                :topics="getSubjectDetails(activeSubject)?.topics || []"
+              />
             </div>
 
-
-            <!-- Card Body -->
-            <div class="space-y-4 p-4">
-
-              <!-- YEAR -->
-              <div class=" flex items-center  gap-2">
-
-                <label
-                  class="mb-1.5 flex items-center gap-2
-                         text-sm font-semibold text-slate-600"
-                >
-
-                  <Icon
-                    name="lucide:calendar-days"
-                    class="h-4 w-4 text-blue-600"
-                  />
-
-                  Year
-
-                </label>
-              <!-- {{getSubjectDetails(subject)?.topics}} ffff -->
-
-                <div class="relative w-full">
-
-                  <select
-                    v-model="subject.year"
-                    class="  w-full appearance-none rounded-sm
-                           border border-slate-200
-                           bg-slate-50 px-3 py-1
-                           text-sm font-medium
-                           outline-none transition
-                           focus:border-blue-600
-                           focus:bg-white
-                           focus:ring-2
-                           focus:ring-blue-100"
-                  >
-                  <option value="all">
-                    All
-                  </option>
-
-                    <option
-                      v-for="year in getSubjectDetails(subject)?.years"
-                      :key="year"
-                      :value="year"
-                    >
-                      {{ year }}
-                    </option>
-
-                  </select>
-
-                  <Icon
-                    name="lucide:chevron-down"
-                    class="pointer-events-none
-                           absolute right-3 top-1/2
-                           h-6 w-6
-                           -translate-y-1/2
-                           text-slate-400"
-                  />
-
-                </div>
-
-              </div>
-
-             
-              <!-- QUESTIONS -->
-                <div class=" flex gap-2 ">
-
-                  <label
-                    class="mb-1.5 flex items-center gap-2
-                          text-sm  whitespace-nowrap  wrap-normal n font-semibold text-slate-600"
-                  >
-
-                    <Icon
-                      name="lucide:list-ordered"
-                      class="h-4 w-4 text-green-600"
-                    />
-
-                    No Questions
-
-                  </label>
-
-
-                  <div class="relative w-full">
-
-                    <select
-                      v-model=" subject.questions"
-                      class="w-full appearance-none rounded-sm
-                            border border-slate-200
-                            bg-slate-50 px-3 py-1
-                            text-sm font-medium
-                            outline-none transition
-                            focus:border-blue-600
-                            focus:bg-white
-                            focus:ring-2
-                            focus:ring-green-100"
-                    >
-
-                      <option
-                        v-for="number in subject.questionOptions"
-                        :key="number"
-                        :value="number"
-                      >
-                        {{ number }} Questions
-                      </option>
-
-                    </select>
-
-                    <Icon
-                      name="lucide:chevron-down"
-                      class="pointer-events-none
-                            absolute right-3 top-1/2
-                            h-4 w-4
-                            -translate-y-1/2
-                            text-slate-400"
-                    />
-
-                  </div>
-
-                </div>
-
-
-                <!-- TOPIC -->
-                <div>
-
-                  <div
-                    class="mb-1.5 flex items-center
-                          justify-between"
-                  >
-
-                    <label
-                      class="flex items-center gap-2
-                            text-xs font-semibold
-                            text-slate-600"
-                    >
-
-                      <Icon
-                        name="lucide:folder-open"
-                        class="h-4 w-4 text-green-600"
-                      />
-
-                      Topic
-
-                    </label>
-                    <p>
-                       {{
-                          !subject.topics ||
-                          subject.topics.length === 0 ||
-                          subject.topics.length === getSubjectDetails(subject)?.topics?.length
-                            ? "All"
-                            : `${subject.topics.length} Topics`
-                        }}
-                      </p>
-                    
-
-                    <!-- Edit Topic -->
-                    <button
-                      type="button"
-                      @click="openTopicModal(subject)"
-                      class="flex h-8 w-8 items-center
-                            justify-center rounded-full
-                            bg-green-50 text-green-600
-                            transition hover:bg-green-100"
-                      title="Edit Topic"
-                    >
-
-                    
-
-                      <Icon
-                        name="lucide:pencil"
-                        class="h-4 w-4"
-                      />
-
-                    </button>
-                    
-                    <TopicSelector
-  v-if="activeSubject"
-  v-model="showTopicModal"
-  v-model:modelTopics="activeSubject.topics"
-  :topics="getSubjectDetails(activeSubject)?.topics || []"
-/>
-                  </div>
-
-
-                  
-
-                </div>
-              
-            </div>
-
-          </article>
-
-        </div>
+          </div>
+        </article>
 
       </section>
-
-
-      <!-- ================================================= -->
-      <!-- OPTIONS -->
-      <!-- ================================================= -->
-
-     
 
     </main>
 
-     <section class=" shrink-0 h- z-10
-             border-t border-slate-200
-             bg-white  ">
-        <div class="mb- flex items-center gap-1">
+    <!-- ================================================= -->
+    <!-- EXAM OPTIONS (footer) -->
+    <!-- ================================================= -->
 
-          <div class="h-px flex-1 bg-slate-200"></div>
+    <section class="shrink-0 border-t border-[#e6e0d2] bg-[#fffdf8] px-3 py-3 sm:px-6">
 
-          <div
-            class="flex items-center gap-2
-                  rounded-full bg-white
-                    -sm"
+      <div class="mb-3 flex items-center gap-2">
+        <div class="h-px flex-1 bg-[#e6e0d2]"></div>
+        <div class="flex items-center gap-2 rounded-full bg-[#fffdf8] px-2">
+          <Icon name="lucide:settings-2" class="h-4 w-4 text-[#b9873b]" />
+          <h2 class="text-xs font-semibold uppercase tracking-wide text-[#6b665c]">Exam Options</h2>
+        </div>
+        <div class="h-px flex-1 bg-[#e6e0d2]"></div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-3 lg:grid-cols-3">
+
+        <!-- MODE -->
+        <div class="rounded-lg border border-[#e6e0d2] bg-[#f6f3ec] p-3">
+          <label class="mb-1.5 flex items-center gap-2 text-xs font-semibold text-[#24304a]">
+            <Icon name="lucide:monitor-play" class="h-4 w-4 text-[#b9873b]" />
+            Select Mode
+          </label>
+
+          <select
+            v-model="examMode"
+            class="w-full rounded-lg border border-[#e6e0d2] bg-[#fffdf8] px-3 py-1.5
+                   text-sm font-medium text-[#201f22] outline-none
+                   focus:border-[#3c4c6e] focus:ring-2 focus:ring-[#3c4c6e]/15"
           >
-
-            <Icon
-              name="lucide:settings-2"
-              class="h-5 w-5 text-primary"
-            />
-
-            <h2 class="text-sm font-bold text-slate-700">
-              Exam Options
-            </h2>
-
-          </div>
-
-          <div class="h-px flex-1 bg-slate-200"></div>
-
+            <option value="practice">Practice</option>
+            <option value="exam">Examination</option>
+            <option value="timed">Timed Practice</option>
+          </select>
         </div>
 
+        <!-- DURATION -->
+        <div class="rounded-lg border border-[#e6e0d2] bg-[#f6f3ec] p-3">
+          <label class="mb-1.5 flex items-center gap-2 text-xs font-semibold text-[#24304a]">
+            <Icon name="lucide:timer" class="h-4 w-4 text-[#b9873b]" />
+            Exam Duration
+          </label>
 
-        <div
-          class="grid grid-cols-1 gap
-                lg:grid-cols-3"
-        >
-
-          <!-- MODE -->
-          <div
-            class="rounded-sm border 
-                  border-slate-200 bg-white p-1
-                  sm"
-          >
-
-            <label
-              class="mb-1 flex items-center gap-2
-                    text-sm font-bold text-slate-700"
-            >
-
-              <Icon
-                name="lucide:monitor-play"
-                class="h-4 w-4 text-primary"
-              />
-
-              Select Mode
-
-            </label>
-
-
-            <select
-              v-model="examMode"
-              class="w-full rounded-sm
-                    border border-slate-200
-                    bg-slate-50 px-3 py-2
-                    text-sm font-medium
-                    outline-none focus:border-green-600
-                    focus:ring-2 focus:ring-green-100"
-            >
-
-              <option value="practice">
-                Practice
-              </option>
-
-              <option value="exam">
-                Examination
-              </option>
-
-              <option value="timed">
-                Timed Practice
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <!-- DURATION -->
-          <div
-            class="rounded-sm border
-                  border-slate-200 bg-white p-2
-                  shadow-sm"
-          >
-
-            <label
-              class="mb-1 flex items-center gap-2
-                    text-sm font-bold text-slate-700"
-            >
-
-              <Icon
-                name="lucide:timer"
-                class="h-4 w-4 text-primary"
-              />
-
-              Exam Duration
-
-            </label>
-
-
-            <div class="relative">
-
-              <input
-                v-model="examDuration"
-                type="time"
-                step="1"
-                class="w-full rounded-xl
-                      border border-slate-200
-                      bg-slate-50 px-3 py-1
-                      text-sm font-medium
-                      outline-none
-                      focus:border-green-600
-                      focus:ring-2
-                      focus:ring-green-100"
-              />
-
-            </div>
-
-          </div>
-
-
-          <!-- CHECKBOXES -->
-          <div
-            class="rounded-sm border
-                  border-slate-200 bg-white p-1
-                  shadow-sm"
-          >
-
-            <div class="space-y-1">
-
-              <!-- Shuffle Questions -->
-              <label
-                class="flex cursor-pointer
-                      items-center justify-between"
-              >
-
-                <div class="flex items-center gap-3">
-
-                  <div
-                    class="flex h-6 w-6 items-center
-                          justify-center rounded-lg
-                          bg-blue-50 text-blue-600"
-                  >
-
-                    <Icon
-                      name="lucide:shuffle"
-                      class="h-4 w-4"
-                    />
-
-                  </div>
-
-                  <span
-                    class="text-sm font-semibold
-                          text-slate-700"
-                  >
-                    Shuffle Questions
-                  </span>
-
-                </div>
-
-
-                <input
-                  v-model="shuffleQuestions"
-                  type="checkbox"
-                  class="h-4 w-4 rounded
-                        border-slate-300
-                        text-green-600
-                        accent-green-600"
-                />
-
-              </label>
-
-
-              <!-- Shuffle Options -->
-              <label
-                class="flex cursor-pointer
-                      items-center justify-between"
-              >
-
-                <div class="flex items-center gap-3">
-
-                  <div
-                    class="flex h-6 w-6 items-center
-                          justify-center rounded-lg
-                          bg-purple-50 text-purple-600"
-                  >
-
-                    <Icon
-                      name="lucide:list-restart"
-                      class="h-4 w-4"
-                    />
-
-                  </div>
-
-                  <span
-                    class="text-sm font-semibold
-                          text-slate-700"
-                  >
-                    Shuffle Options
-                  </span>
-
-                </div>
-
-
-                <input
-                  v-model="shuffleOptions"
-                  type="checkbox"
-                  class="h-4 w-4 rounded
-                        border-slate-300
-                        text-green-600
-                        accent-green-600"
-                />
-
-              </label>
-
-            </div>
-
-          </div>
-
+          <input
+            v-model="examDuration"
+            type="time"
+            step="1"
+            class="w-full rounded-lg border border-[#e6e0d2] bg-[#fffdf8] px-3 py-1.5
+                   font-['IBM_Plex_Mono',monospace] text-sm font-medium text-[#201f22] outline-none
+                   focus:border-[#3c4c6e] focus:ring-2 focus:ring-[#3c4c6e]/15"
+          />
         </div>
 
-
-        <!-- INSTRUCTIONS -->
-        <!-- <div class="mt-4 flex justify-end">
-
-          <button
-            type="button"
-            @click="showInstructions = true"
-            class="flex items-center gap-2
-                  rounded-xl border
-                  border-slate-300 bg-white
-                  px-5 py-2.5
-                  text-sm font-bold text-slate-700
-                  transition hover:border-green-500
-                  hover:bg-green-50"
-          >
-
-            <Icon
-              name="lucide:circle-help"
-              class="h-5 w-5 text-green-600"
-            />
-
-            Instructions
-
-          </button>
-
-        </div> -->
-
-      </section>
-
-
-    <!-- ================================================= -->
-    <!-- TOPIC MODAL -->
-    <!-- ================================================= -->
-<!-- 
-    <Teleport to="body">
-
-      <div
-        v-if="topicSubject"
-        class="fixed inset-0 z-50 flex
-               items-center justify-center
-               bg-black/50 p-4 backdrop-blur-sm"
-      >
-
-        <div
-          class="w-full max-w-md
-                 rounded-2xl bg-white
-                 p-6 shadow-2xl"
-        >
-
-          <div
-            class="mb-5 flex items-center
-                   justify-between"
-          >
-
-            <div>
-
-              <h2 class="font-bold text-slate-900">
-                Select Topic
-              </h2>
-
-              <p class="text-xs text-slate-500">
-                {{ topicSubject.name }}
-              </p>
-
+        <!-- CHECKBOXES -->
+        <div class="space-y-2 rounded-lg border border-[#e6e0d2] bg-[#f6f3ec] p-3">
+          <label class="flex cursor-pointer items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="flex h-6 w-6 items-center justify-center rounded-md bg-[#e9edf5] text-[#3c4c6e]">
+                <Icon name="lucide:shuffle" class="h-3.5 w-3.5" />
+              </div>
+              <span class="text-xs font-semibold text-[#201f22]">Shuffle Questions</span>
             </div>
+            <input
+              v-model="shuffleQuestions"
+              type="checkbox"
+              class="h-4 w-4 rounded border-[#e6e0d2] accent-[#24304a]"
+            />
+          </label>
 
-
-            <button
-              @click="topicSubject = null"
-              class="flex h-9 w-9 items-center
-                     justify-center rounded-full
-                     bg-slate-100
-                     hover:bg-slate-200"
-            >
-
-              <Icon
-                name="lucide:x"
-                class="h-5 w-5"
-              />
-
-            </button>
-
-          </div>
-
-
-          <div class="space-y-2">
-
-            <button
-              v-for="topic in topics"
-              :key="topic"
-              @click="selectTopic(topic)"
-              class="flex w-full items-center
-                     justify-between rounded-xl
-                     border border-slate-200
-                     p-3 text-left text-sm
-                     font-medium transition
-                     hover:border-green-500
-                     hover:bg-green-50"
-            >
-
-              {{ topic }}
-
-              <Icon
-                name="lucide:chevron-right"
-                class="h-4 w-4 text-slate-400"
-              />
-
-            </button>
-
-          </div>
-
+          <label class="flex cursor-pointer items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="flex h-6 w-6 items-center justify-center rounded-md bg-[#f4ecda] text-[#b9873b]">
+                <Icon name="lucide:list-restart" class="h-3.5 w-3.5" />
+              </div>
+              <span class="text-xs font-semibold text-[#201f22]">Shuffle Options</span>
+            </div>
+            <input
+              v-model="shuffleOptions"
+              type="checkbox"
+              class="h-4 w-4 rounded border-[#e6e0d2] accent-[#24304a]"
+            />
+          </label>
         </div>
 
       </div>
-
-    </Teleport> -->
-
+    </section>
 
     <!-- ================================================= -->
     <!-- INSTRUCTIONS MODAL -->
     <!-- ================================================= -->
 
     <Teleport to="body">
-
       <div
         v-if="showInstructions"
-        class="fixed inset-0 z-50 flex
-               items-center justify-center
-               bg-black/50 p-4 backdrop-blur-sm"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
       >
+        <div class="w-full max-w-lg rounded-2xl border border-[#e6e0d2] bg-[#fffdf8] p-6 shadow-2xl">
 
-        <div
-          class="w-full max-w-lg
-                 rounded-2xl bg-white
-                 p-6 shadow-2xl"
-        >
-
-          <div
-            class="mb-5 flex items-center
-                   justify-between"
-          >
-
-            <h2 class="text-xl font-bold">
+          <div class="mb-5 flex items-center justify-between">
+            <h2 class="font-['Fraunces',Georgia,serif] text-lg font-semibold text-[#24304a]">
               Exam Instructions
             </h2>
-
             <button
               @click="showInstructions = false"
-              class="flex h-9 w-9 items-center
-                     justify-center rounded-full
-                     bg-slate-100"
+              class="flex h-9 w-9 items-center justify-center rounded-full bg-[#f6f3ec] text-[#6b665c] hover:bg-[#e6e0d2]"
             >
-
-              <Icon
-                name="lucide:x"
-                class="h-5 w-5"
-              />
-
+              <Icon name="lucide:x" class="h-4 w-4" />
             </button>
-
           </div>
 
-
-          <div class="space-y-3 text-sm text-slate-600">
-
-            <p>
-              <Icon
-                name="lucide:check-circle"
-                class="mr-2 inline h-4 w-4 text-green-600"
-              />
+          <div class="space-y-3 text-sm text-[#6b665c]">
+            <p class="flex items-start gap-2">
+              <Icon name="lucide:check-circle" class="mt-0.5 h-4 w-4 shrink-0 text-[#3f7a5c]" />
               Select the subjects you want to practice.
             </p>
-
-            <p>
-              <Icon
-                name="lucide:clock"
-                class="mr-2 inline h-4 w-4 text-green-600"
-              />
+            <p class="flex items-start gap-2">
+              <Icon name="lucide:clock" class="mt-0.5 h-4 w-4 shrink-0 text-[#3f7a5c]" />
               Complete the examination before the timer ends.
             </p>
-
-            <p>
-              <Icon
-                name="lucide:shuffle"
-                class="mr-2 inline h-4 w-4 text-green-600"
-              />
+            <p class="flex items-start gap-2">
+              <Icon name="lucide:shuffle" class="mt-0.5 h-4 w-4 shrink-0 text-[#3f7a5c]" />
               You can shuffle questions and answer options.
             </p>
-
           </div>
-
 
           <button
             @click="showInstructions = false"
-            class="mt-6 w-full rounded-xl
-                   bg-green-700 py-3
-                   text-sm font-bold text-white
-                   hover:bg-green-800"
+            class="mt-6 w-full rounded-xl bg-[#24304a] py-3 text-sm font-semibold text-white
+                   transition hover:opacity-90"
           >
             Got It
           </button>
-
         </div>
-
       </div>
-
     </Teleport>
 
     <!-- ================================================= -->
     <!-- SUBJECT SELECTOR MODAL -->
     <!-- ================================================= -->
 
-<SelectSubject
-  v-model="showSubjectModal"
-  v-model:modelSubjects="selectedSubjects"
-/>
+    <SelectSubject
+      v-model="showSubjectModal"
+      v-model:modelSubjects="selectedSubjects"
+    />
 
   </div>
 </template>
-
 
 <script setup>
 import { ref, computed } from 'vue'
 import subjectsdetails  from '~/data/subjectdetail.js'
 import questions from '~/data/questions.js'
+const  {getQuestions} = useQuestionSearch()
 /*
 |--------------------------------------------------------------------------
 | Emits
@@ -1129,21 +604,6 @@ const getSubjectDetails = (subject) => {
   )
 }
 
-
-// selectedSubjects.value.push({
-//   id: subject.id,
-//   name: subject.name,
-//   icon: subject.icon,
-
-//   // Latest year automatically selected
-//   year: details?.years?.at(-1) || null,
-
-//   // Default topic
-//   topic: 'All',
-
-//   // Default questions
-//   questions: 20
-// })
 /*
 |--------------------------------------------------------------------------
 | Subject Colors
@@ -1322,14 +782,6 @@ const getSubjectColor = (subject) => {
 
 /*
 |--------------------------------------------------------------------------
-| Selected Subjects
-|--------------------------------------------------------------------------
-*/
-
-
-
-/*
-|--------------------------------------------------------------------------
 | Check If Subject Is Selected
 |--------------------------------------------------------------------------
 */
@@ -1369,22 +821,11 @@ const toggleSubject = (subject) => {
 
   } else {
 
-    // selectedSubjects.value.push(
-    //   subject
-    // )
     selectedSubjects.value.push(createSubject(subject))
 
   }
 
 }
-
-/*
-|--------------------------------------------------------------------------
-| Subject Modal
-|--------------------------------------------------------------------------
-*/
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -1397,11 +838,6 @@ const openSubjectModal = () => {
   showSubjectModal.value = true
 
 }
-
-
-// const openSubjectModal = () => {
-//   showSubjectModal.value = true
-// }
 
 const handleSubjectsConfirmed = (subjects) => {
   console.log('DATA FROM SELECT SUBJECT:', subjects)
@@ -1572,26 +1008,6 @@ import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 |--------------------------------------------------------------------------
 */
 
-// const shuffleArray = (array) => {
-//   const shuffled = [...array]
-
-//   for (let i = shuffled.length - 1; i > 0; i--) {
-//     const j = Math.floor(
-//       Math.random() * (i + 1)
-//     )
-
-//     ;[
-//       shuffled[i],
-//       shuffled[j]
-//     ] = [
-//       shuffled[j],
-//       shuffled[i]
-//     ]
-//   }
-
-//   return shuffled
-// }
-
 function shuffleArray(array) {
   const arr = [...array] // Copy to avoid mutating original
 
@@ -1676,33 +1092,29 @@ const startExam = async () => {
  for (const subject of appState.value.selectedSubjects) {
       console.log(subject, 'subject');
   // Get all questions for this subject
-let subjectQuestions = questions.filter(
-  question =>
-    question.subject === subject.id &&
-    question.year === subject.year
-   
-    // (subject.topics.length === 0 ||
-    //   subject.topics.includes(question.topic))
-)
-if(!subjectQuestions){
-  subjectQuestions = questions.filter(
-  question =>
-    question.subject === subject.id
-   
-    // (subject.topics.length === 0 ||
-    //   subject.topics.includes(question.topic))
-)
-}
+let subjectQuestions = await getQuestions({
+  subject:subject.id,
+  year:subject.year,
+  limit:subject.questions
+    })  
+
+  if (subjectQuestions.length <= 0) {
+
+   subjectQuestions =  await getQuestions({
+  subject:subject.id,
+  limit:subject.questions
+    }) 
+  }
   // Shuffle question order
   if (shuffleQuestions.value) {
     subjectQuestions = shuffleArray(subjectQuestions)
   }
 
   // Take only the required number of questions
-  subjectQuestions = subjectQuestions.slice(
-    0,
-    subject.questions
-  )
+  // subjectQuestions = subjectQuestions.slice(
+  //   0,
+  //   subject.questions
+  // )
 
   // Shuffle options if enabled
   if (shuffleOptions.value) {
@@ -1719,9 +1131,8 @@ console.log(examQuestions);
 
 
   appState.value.examQuestions = examQuestions
-    // appState.value.isHome =
-  //   false
   saveUser()
+console.log( await getQuestions({subject:"english"  }) );
 
   // Go to exam
   await navigateTo('/exam')
@@ -1737,7 +1148,6 @@ console.log(examQuestions);
 onMounted(() => {
 
 console.log(appState.value.selectedSubjects, 'appState.value.selectedSubjects');
-// appState.value.selectedSubjects =    selectedSubjects.value
 
 if (appState.value.selectedSubjects.length > 0) {
   selectedSubjects.value = appState.value.selectedSubjects
@@ -1771,7 +1181,6 @@ watch(
       }
 
       // default questions
-// Default questions
         if (!subject.questions) {
           subject.questions =
             subject.id === "english" ? 60 : 40
@@ -1797,29 +1206,7 @@ const goHome = () => {
 }
 
 </script>
+
 <style scoped>
-.exam-history {
-  --bg: #f6f3ec;
-  --surface: #fffdf8;
-  --ink: #201f22;
-  --ink-soft: #6b665c;
-  --line: #e6e0d2;
-  --navy: #24304a;
-  --navy-soft: #3c4c6e;
-  --gold: #b9873b;
-  --good: #3f7a5c;
-  --good-bg: #e7f0e8;
-  --bad: #ab5137;
-  --bad-bg: #f7e9e2;
-  --mid-bg: #f4ecda;
- 
-  display: flex;
-  height: 100%;
-  min-height: 0;
-  flex-direction: column;
-  overflow: hidden;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: 'Inter', system-ui, sans-serif;
-}
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap');
 </style>

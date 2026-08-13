@@ -23,11 +23,11 @@ async function getQuestionsDB() {
 
 export function useQuestionSearch() {
 
-  const results       = ref([])   // matched questions with snippet
+  const results = ref([])   // matched questions with snippet
   const currentQuestion = ref(null)
-  const loading        = ref(false)
-  const error          = ref(null)
-  const subjects       = ref([])  // for filter chips
+  const loading = ref(false)
+  const error = ref(null)
+  const subjects = ref([])  // for filter chips
 
   // ----- turn "ozone layer" into an FTS5 query: ozone* layer* ------------
   // (prefix-matches each word so partial typing still returns results)
@@ -271,6 +271,107 @@ export function useQuestionSearch() {
     error.value = null
   }
 
+
+  const getQuestions = async ({
+    subject = null,
+    year = null,
+    examType = null,
+    limit = 40
+  } = {}) => {
+
+    loading.value = true
+    error.value = null
+
+    try {
+
+      const db = await getQuestionsDB()
+
+      const conditions = []
+      const params = []
+
+      // -----------------------------
+      // SUBJECT
+      // -----------------------------
+
+      if (subject) {
+        conditions.push('subject = ?')
+        params.push(subject)
+      }
+
+      // -----------------------------
+      // YEAR
+      // -----------------------------
+
+      if (year) {
+        conditions.push('year = ?')
+        params.push(year)
+      }
+
+      // -----------------------------
+      // EXAM TYPE
+      // -----------------------------
+
+      if (examType) {
+        conditions.push('examType = ?')
+        params.push(examType)
+      }
+
+      // -----------------------------
+      // WHERE
+      // -----------------------------
+
+      const where = conditions.length
+        ? `WHERE ${conditions.join(' AND ')}`
+        : ''
+
+      // -----------------------------
+      // LIMIT
+      // -----------------------------
+
+      params.push(limit)
+
+      const rows = await db.select(
+        `
+      SELECT *
+      FROM questions
+      ${where}
+      ORDER BY RANDOM()
+      LIMIT ?
+      `,
+        params
+      )
+
+      return rows.map(row => ({
+        ...row,
+
+        options: row.options
+          ? JSON.parse(row.options)
+          : {},
+
+        optionsHtml: row.options_html
+          ? JSON.parse(row.options_html)
+          : {},
+
+        hasPassage: !!row.hasPassage
+      }))
+
+    } catch (err) {
+
+      console.error(
+        '❌ get questions error:',
+        err
+      )
+
+      error.value = err
+
+      return []
+
+    } finally {
+
+      loading.value = false
+
+    }
+  }
   return {
     results,
     currentQuestion,
@@ -278,6 +379,7 @@ export function useQuestionSearch() {
     loading,
     error,
     search,
+    getQuestions, 
     loadQuestion,
     loadSubjects,
     addQuestion,

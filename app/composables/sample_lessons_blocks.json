@@ -1,0 +1,135 @@
+[
+  {
+    "id": "chemistry",
+    "name": "Chemistry",
+    "icon": "lucide:flask-conical",
+    "topics": [
+      {
+        "id": "chem-acids-bases",
+        "title": "Acids, Bases & Salts",
+        "lessons": [
+          {
+            "id": "chem-acids-intro",
+            "slug": "intro-to-acids",
+            "title": "Introduction to Acids",
+            "summary": "What makes a substance an acid, and how we recognize one.",
+            "blocks": [
+              {
+                "type": "paragraph",
+                "text": "An acid is a substance that releases H+ ions when dissolved in water. Common examples include HCl, H2SO4, and CH3COOH (acetic acid, found in vinegar)."
+              },
+              {
+                "type": "heading",
+                "level": 3,
+                "text": "Properties of Acids"
+              },
+              {
+                "type": "list",
+                "ordered": false,
+                "items": [
+                  "Taste sour",
+                  "Turn blue litmus paper red",
+                  "React with metals to release H2 gas",
+                  "Have a pH below 7"
+                ]
+              },
+              {
+                "type": "table",
+                "caption": "Common acids and where they're found",
+                "headers": ["Acid", "Formula", "Found in"],
+                "rows": [
+                  ["Hydrochloric acid", "HCl", "Stomach acid"],
+                  ["Sulfuric acid", "H2SO4", "Car batteries"],
+                  ["Acetic acid", "CH3COOH", "Vinegar"],
+                  ["Citric acid", "C6H8O7", "Citrus fruits"]
+                ]
+              },
+              {
+                "type": "note",
+                "text": "Never taste a substance in the lab to test if it's an acid — always use litmus paper or a pH meter instead."
+              },
+              {
+                "type": "example",
+                "title": "Reaction of an acid with a metal",
+                "text": "Zn + H2SO4 -> ZnSO4 + H2\n\nWhen zinc reacts with dilute sulfuric acid, hydrogen gas is released — you can test for it with a lit splint, which produces a characteristic 'pop' sound."
+              }
+            ]
+          },
+          {
+            "id": "chem-ph-scale",
+            "slug": "the-ph-scale",
+            "title": "The pH Scale",
+            "summary": "Measuring how acidic or basic a solution is, from 0 to 14.",
+            "blocks": [
+              {
+                "type": "paragraph",
+                "text": "The pH scale runs from 0 to 14, and tells you how acidic or basic a solution is."
+              },
+              {
+                "type": "table",
+                "headers": ["pH range", "Classification"],
+                "rows": [
+                  ["0 - 6", "Acidic"],
+                  ["7", "Neutral"],
+                  ["8 - 14", "Basic (alkaline)"]
+                ]
+              },
+              {
+                "type": "paragraph",
+                "text": "pH is calculated as: pH = -log10[H+]"
+              },
+              {
+                "type": "example",
+                "title": "Calculating pH",
+                "text": "If [H+] = 1 x 10^-3 moldm3, then:\npH = -log10(1 x 10^-3) = 3\n\nThis solution is strongly acidic."
+              },
+              {
+                "type": "note",
+                "text": "A change of 1 on the pH scale means a 10x change in acidity — pH 4 is ten times more acidic than pH 5."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mathematics",
+    "name": "Mathematics",
+    "icon": "lucide:sigma",
+    "topics": [
+      {
+        "id": "math-statistics",
+        "title": "Statistics & Probability",
+        "lessons": [
+          {
+            "id": "math-mean-median-mode",
+            "slug": "mean-median-mode",
+            "title": "Mean, Median and Mode",
+            "summary": "The three most common ways to describe the 'center' of a data set.",
+            "blocks": [
+              {
+                "type": "table",
+                "headers": ["Term", "Meaning"],
+                "rows": [
+                  ["Mean", "The average — add all values, divide by how many there are"],
+                  ["Median", "The middle value when data is arranged in order"],
+                  ["Mode", "The value that appears most often"]
+                ]
+              },
+              {
+                "type": "example",
+                "title": "Finding the median",
+                "text": "Data: 3, 7, 9, 12, 15\n\nArranged in order, the middle value (3rd of 5) is 9.\nSo the median is 9."
+              },
+              {
+                "type": "note",
+                "text": "If there's an even number of values, the median is the average of the two middle numbers."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

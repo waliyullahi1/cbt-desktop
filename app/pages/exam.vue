@@ -52,7 +52,7 @@ const goToQuestion = (index) => {
   try {
     saveQuestionTime()
     currentQuestion.value = currentSubject.value.questions[index]
-    console.log(currentSubject.value);
+   
    currentSubject.value.currentQuestion= index + 1
     startQuestionTimer()
   } catch (error) {
@@ -231,8 +231,7 @@ const submitExam = async () => {
      // JAMB total questions for this subject
   const jambQuestions =
       subject.id === "english" ? 60 : 40
-        console.log(jambQuestions);
-        console.log();
+      
         
     // Score out of 100
     subject.score = Number(
@@ -247,7 +246,7 @@ const submitExam = async () => {
     aggregate += subject.score
     maxAggregate += subject.maxScore
   })
-console.log(aggregate, maxAggregate);
+
 
 aggregate = Number(aggregate.toFixed(2))
 maxAggregate = Number(maxAggregate.toFixed(2))
@@ -316,7 +315,7 @@ maxAggregate = Number(maxAggregate.toFixed(2))
     speed
   }
 
-console.log(appState.value.examSettings, 'examSettings');
+
 
 await save({
 
@@ -415,7 +414,7 @@ function handleKeyboard(event) {
   }
 
   const key = event.key.toLowerCase()
-  console.log(key,'key');
+
   
   switch (key) {
     case "n":
@@ -486,7 +485,7 @@ function preventShortcuts(e) {
 
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
-    console.log("Student left the exam")
+   
   }
 })
 
@@ -516,7 +515,7 @@ onMounted( async () => {
   // console.log(histories.value);
   
   const  examDuration= timeToSeconds(appState.value.examSettings.duration);
-      console.log(appState.value.selectedSubjects);
+    
       
     // if (!appState.value.selectedSubjects?.length) return
   
@@ -577,10 +576,8 @@ onMounted( async () => {
       
 })
 onBeforeUnmount(async () => {
-   console.log(
-    "AFTER LEAVE EXAM",
-    JSON.stringify(appState.value.selectedSubjects)
-  )
+ 
+   
   await appWindow.setFullscreen(false)
   await appWindow.setDecorations(true)
   await appWindow.setResizable(true)

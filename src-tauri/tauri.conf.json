@@ -33,7 +33,7 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "resources": ["resources/dictionary.db",  "resources/questions.db"],
+    "resources": ["resources/dictionary.db",  "resources/questions.db","resources/lessons.db"],
     "android": {
       "debugApplicationIdSuffix": ".debug"
     }

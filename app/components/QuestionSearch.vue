@@ -94,7 +94,7 @@
       </div>
 
       <!-- RESULTS LIST -->
-      <ul v-if="!currentQuestion && results.length" class="result-list">
+      <ul v-if="!currentQuestion && results.length" class="result-list overflow-y-scroll">
         <li
           v-for="row in results"
           :key="row.id"
@@ -307,13 +307,13 @@ const goHome = () => emit('gohome')
 
 .lookup-slip {
   position: relative; display: flex; align-items: center; gap: 0.6rem;
-  max-width: 640px; margin: 0 auto; padding: 0.4rem 0.9rem;
+    margin: 0 auto; padding: 0.1rem 0.9rem; max-width: 70%;
   background: var(--surface); border: 1px solid var(--line);
-  border-radius: 0.85rem; box-shadow: 0 1px 2px rgba(36, 48, 74, 0.05);
+  border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(36, 48, 74, 0.05);
 }
 .lookup-slip:focus-within { border-color: var(--navy-soft); box-shadow: 0 0 0 3px rgba(60, 76, 110, 0.12); }
 .lookup-slip__icon { flex-shrink: 0; color: var(--ink-soft); font-size: 1rem; }
-.lookup-slip__input {
+.lookup-slip__input { width: 90px;
   flex: 1; border: none; outline: none; background: transparent;
   padding: 0.65rem 0; font-size: 0.95rem; color: var(--ink);
 }
@@ -329,7 +329,7 @@ const goHome = () => emit('gohome')
 
 .filter-row {
   display: flex; flex-wrap: wrap; gap: 0.5rem;
-  max-width: 640px; margin: 0.75rem auto 0;
+  max-width: 90%; margin: 0.75rem auto 0;
 }
 .filter-chip {
   padding: 0.35rem 0.8rem; border-radius: 999px;

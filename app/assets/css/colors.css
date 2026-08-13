@@ -1,0 +1,68 @@
+/* =========================================================================
+   COLOR SYSTEM — add this to your main.css (import it, or paste directly)
+   =========================================================================
+   One named variable per color. Use these everywhere instead of hex codes,
+   so the whole app's palette lives in one place and can be changed once.
+   ========================================================================= */
+
+:root {
+
+  /* ---- Backgrounds ------------------------------------------------------
+     Two-layer system: --color-bg is the app's base background (page/canvas),
+     --color-surface is what sits ON TOP of it (cards, inputs, modals).
+     Keeping them one shade apart is what gives cards their subtle "lift"
+     without needing a shadow to do all the work. */
+
+  --color-bg:          #f6f3ec;  /* page background — behind everything */
+  --color-surface:     #fffdf8;  /* cards, inputs, modals, headers-on-cream */
+
+  /* ---- Text --------------------------------------------------------------
+     Two levels only: primary reading text, and everything secondary
+     (captions, hints, timestamps, placeholder-adjacent text). */
+
+  --color-ink:         #201f22;  /* primary text — headings, body copy */
+  --color-ink-soft:    #6b665c;  /* secondary text — labels, captions, meta */
+
+  /* ---- Structure -----------------------------------------------------
+     Borders, dividers, the dashed "perforation" rule. One color for all
+     of it keeps every card/table/input edge visually consistent. */
+
+  --color-line:        #e6e0d2;  /* borders, dividers, input outlines */
+
+  /* ---- Primary (Navy) -----------------------------------------------
+     The app's main brand color. Use for headers, primary buttons,
+     selected/active states, and icons that need to read as "important"
+     on a light background. */
+
+  --color-navy:        #24304a;  /* headers, primary buttons, selected state */
+  --color-navy-soft:   #3c4c6e;  /* focus rings, hover states, secondary icons */
+
+  /* ---- Accent (Gold) ---------------------------------------------------
+     The single decorative accent. Use sparingly — eyebrow labels, active
+     tab underlines, badges, icons that should catch the eye without
+     competing with navy for "primary action" status. If everything is
+     gold, nothing is. */
+
+  --color-gold:        #b9873b;  /* accents, badges, active/highlighted icons */
+
+  /* ---- Success / Correct ------------------------------------------------
+     Anything meaning "right answer", "passed", "good to go". Always pair
+     the bg with the solid color (bg for the container, solid for text/icon
+     on top of it) rather than mixing with other semantic pairs. */
+
+  --color-good:        #3f7a5c;  /* correct-answer text/icons, success state */
+  --color-good-bg:     #e7f0e8;  /* correct-answer background fill */
+
+  /* ---- Danger / Incorrect ------------------------------------------------
+     Anything meaning "wrong answer", "delete", "error". */
+
+  --color-bad:         #ab5137;  /* wrong-answer text/icons, destructive actions */
+  --color-bad-bg:      #f7e9e2;  /* wrong-answer background fill, error banners */
+
+  /* ---- Neutral accent background -----------------------------------------
+     A third, quieter background tone — for "in progress" / mid-range states
+     that shouldn't read as fully good or fully bad (e.g. a 50-70% score band). */
+
+  --color-mid-bg:      #f4ecda;  /* neutral/warning-adjacent background fill */
+
+}
