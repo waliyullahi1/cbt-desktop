@@ -6,8 +6,7 @@ let lessonsDb = null
 
 async function getLessonsDB() {
   if (!lessonsDb) {
-    const dbPath = await resolveResource("resources/lessons.db")
-    lessonsDb = await Database.load(`sqlite:${dbPath}`)
+     lessonsDb = await Database.load('sqlite:lessons.db')
   }
   return lessonsDb
 }
@@ -28,6 +27,8 @@ export function useLessons() {
       const db = await getLessonsDB()
 
       const subjects = await db.select(`SELECT id, name, icon FROM subjects`)
+      console.log(subjects, 'subjects');
+      
       const topics    = await db.select(`SELECT id, subject_id, title FROM topics ORDER BY order_index`)
       const lessons    = await db.select(`SELECT id, topic_id, slug, title FROM lessons ORDER BY order_index`)
 

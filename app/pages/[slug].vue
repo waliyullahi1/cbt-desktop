@@ -88,6 +88,10 @@
             <!-- topics + lessons -->
             <div v-if="openSubjects.has(subject.id)">
               <div v-for="topic in subject.topics" :key="topic.id" class="mb-1">
+               <button type="button"  title="Delete subject"   @click.stop="openDelete('subject', subject)"
+                  class="flex h-6 w-6 shrink-0 items-center  justify-center rounded-md  text-slate-300 transition         hover:bg-red-100 hover:text-red-600" >
+                 <Icon  name="lucide:x"     class="h-3.5 w-3.5"     />
+                 </button>
                 <p class="px-4 pb-1 pt-2 text-[11px] font-semibold text-slate-400">
                   {{ topic.title }}
                 </p>
@@ -95,12 +99,16 @@
                 <NuxtLink
                   v-for="lesson in topic.lessons"
                   :key="lesson.id"
-                  :to="`/lessons/${lesson.slug}`"
+                  :to="`/${lesson.slug}`"
                   class="block border-l-[3px] py-1.5 pl-4 pr-3 text-[13.5px] transition"
                   :class="route.params.slug === lesson.slug
                     ? 'border-navy bg-white font-semibold text-navy'
                     : 'border-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900'"
                 >
+                <button type="button"  title="Delete subject"     @click.stop="openDelete('topic', topic)"
+                  class="flex h-6 w-6 shrink-0 items-center  justify-center rounded-md  text-slate-300 transition         hover:bg-red-100 hover:text-red-600"   >
+                 <Icon  name="lucide:x"     class="h-3.5 w-3.5"     />
+                 </button>
                   {{ lesson.title }}
                 </NuxtLink>
               </div>
@@ -120,7 +128,7 @@
       <!-- ================================================= -->
 
       <main class="min-h-0 flex-1 overflow-y-auto bg-white">
-
+        
         <!-- SEARCH RESULTS -->
         <div v-if="showSearchResults" class="mx-auto max-w-3xl px-4 py-8 sm:px-10">
           <h2 class="mb-4 text-lg font-semibold text-slate-800">
@@ -132,7 +140,7 @@
               v-for="row in results"
               :key="row.slug"
               class="cursor-pointer rounded-lg border border-slate-200 p-4 transition hover:border-navy-soft hover:shadow-sm"
-              @click="navigateTo(`/lessons/${row.slug}`)"
+              @click="navigateTo(`/${row.slug}`)"
             >
               <span class="mb-1 inline-block rounded bg-slate-100 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
                 {{ row.subjectName }}
@@ -148,25 +156,31 @@
         <article v-else-if="currentLesson" class="mx-auto max-w-3xl px-4 py-10 sm:px-10">
 
           <h1 class="text-3xl font-bold text-slate-900 sm:text-4xl">
-            {{ currentLesson.title }}
+            {{ currentLesson.title }}  <TopicImporter
+                
+                  :lesson-id="currentLesson.id" 
+                   @updated="handleLessonUpdated"
+               
+              />
+             
           </h1>
-          <p v-if="currentLesson.summary" class="mt-3 text-lg text-slate-500">
-            {{ currentLesson.summary }}
-          </p>
+          
 
           <div class="mt-6">
+            
             <LessonBlock
               v-for="(block, i) in currentLesson.blocks"
               :key="i"
               :block="block"
             />
+           
           </div>
 
           <!-- prev / next footer -->
           <div class="mt-12 flex items-center justify-between gap-3 border-t border-slate-200 pt-6">
             <NuxtLink
               v-if="prevLesson"
-              :to="`/lessons/${prevLesson.slug}`"
+              :to="`/${prevLesson.slug}`"
               class="flex flex-1 items-center gap-2 rounded-lg border border-slate-200 px-4 py-3 text-left transition hover:border-navy-soft"
             >
               <Icon name="lucide:chevron-left" class="h-4 w-4 text-slate-400" />
@@ -179,7 +193,7 @@
 
             <NuxtLink
               v-if="nextLesson"
-              :to="`/lessons/${nextLesson.slug}`"
+              :to="`/${nextLesson.slug}`"
               class="flex flex-1 items-center justify-end gap-2 rounded-lg border border-slate-200 px-4 py-3 text-right transition hover:border-navy-soft"
             >
               <div class="min-w-0">
@@ -197,6 +211,25 @@
         </div>
 
       </main>
+
+      <Teleport to="body">
+  <div
+    v-if="showDelete"
+    class="fixed inset-0 z-[100] flex items-center
+           justify-center bg-black/40 p-4"
+    @click.self="closeDelete"
+  >
+    <div class="w-full max-w-md">
+      <Delete
+        :type="deleteType"
+        :id="deleteId"
+        :name="deleteName"
+        @deleted="handleDeleted"
+        @cancel="closeDelete"
+      />
+    </div>
+  </div>
+</Teleport>
     </div>
   </div>
 </template>
@@ -205,6 +238,12 @@
 import { ref, computed, watch, onMounted } from 'vue'
 
 const route = useRoute()
+const showDelete = ref(false)
+
+const deleteType = ref('topic')
+const deleteId = ref('')
+const deleteName = ref('')
+
 
 const {
   sidebar,
@@ -305,6 +344,39 @@ const renderSnippet = (snippet) => {
 }
 
 const goHome = () => navigateTo('/')
+
+const openDelete = (type, item) => {
+  deleteType.value = type
+
+  if (type === 'subject') {
+    deleteId.value = item.id
+    deleteName.value = item.name
+  } else {
+    deleteId.value = item.id
+    deleteName.value = item.title
+  }
+
+  showDelete.value = true
+}
+
+const closeDelete = () => {
+  showDelete.value = false
+}
+
+const handleDeleted = async () => {
+  showDelete.value = false
+
+  await loadSidebar()
+
+  /*
+   * Refresh current lesson/sidebar state.
+   */
+  if (currentLesson.value?.slug) {
+    await openLessonBySlug(
+      currentLesson.value.slug
+    )
+  }
+}
 </script>
 
 <style scoped>
